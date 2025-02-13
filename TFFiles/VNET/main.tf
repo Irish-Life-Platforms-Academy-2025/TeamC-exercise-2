@@ -1,7 +1,24 @@
+# Define variables
+variable "resource_group_name" {
+  description = "The name of the resource group"
+}
+
+variable "location" {
+  description = "The location of the resources"
+}
+
+variable "admin_username" {
+  description = "The admin username for the VMs"
+}
+
+variable "admin_password" {
+  description = "The admin password for the VMs"
+}
+
 # Create a resource group
 resource "azurerm_resource_group" "main" {
-  name     = "TEAMC-ResourceGroup"
-  location = "uksouth"
+  name     = var.resource_group_name
+  location = var.location
 }
 
 # Create a public VNet with 3 subnets
@@ -119,8 +136,8 @@ resource "azurerm_virtual_machine" "public_vm_1" {
 
   os_profile {
     computer_name  = "TEAMC-publicvm1"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -151,8 +168,8 @@ resource "azurerm_virtual_machine" "public_vm_2" {
 
   os_profile {
     computer_name  = "TEAMC-publicvm2"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -183,8 +200,8 @@ resource "azurerm_virtual_machine" "public_vm_3" {
 
   os_profile {
     computer_name  = "TEAMC-publicvm3"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -249,8 +266,8 @@ resource "azurerm_virtual_machine" "private_vm_1" {
 
   os_profile {
     computer_name  = "TEAMC-privatevm1"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -281,8 +298,8 @@ resource "azurerm_virtual_machine" "private_vm_2" {
 
   os_profile {
     computer_name  = "TEAMC-privatevm2"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -313,8 +330,8 @@ resource "azurerm_virtual_machine" "private_vm_3" {
 
   os_profile {
     computer_name  = "TEAMC-privatevm3"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -339,8 +356,40 @@ resource "azurerm_network_security_group" "public_vm_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "AllowPrivateConnectivity"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "10.1.0.0/16"
+    destination_address_prefix = "10.0.0.0/16"
+  }
 }
 
+# Network Security Group for Private VMs to allow private connectivity
+resource "azurerm_network_security_group" "private_vm_nsg" {
+  name                = "TEAMC-PrivateVMNSG"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  security_rule {
+    name                       = "AllowPrivateConnectivity"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "10.0.0.0/16"
+    destination_address_prefix = "10.1.0.0/16"
+  }
+}
+
+# Associate NSGs with Network Interfaces
 resource "azurerm_network_interface_security_group_association" "public_vm_nic_nsg_1" {
   network_interface_id      = azurerm_network_interface.public_vm_nic_1.id
   network_security_group_id = azurerm_network_security_group.public_vm_nsg.id
@@ -354,4 +403,19 @@ resource "azurerm_network_interface_security_group_association" "public_vm_nic_n
 resource "azurerm_network_interface_security_group_association" "public_vm_nic_nsg_3" {
   network_interface_id      = azurerm_network_interface.public_vm_nic_3.id
   network_security_group_id = azurerm_network_security_group.public_vm_nsg.id
+}
+
+resource "azurerm_network_interface_security_group_association" "private_vm_nic_nsg_1" {
+  network_interface_id      = azurerm_network_interface.private_vm_nic_1.id
+  network_security_group_id = azurerm_network_security_group.private_vm_nsg.id
+}
+
+resource "azurerm_network_interface_security_group_association" "private_vm_nic_nsg_2" {
+  network_interface_id      = azurerm_network_interface.private_vm_nic_2.id
+  network_security_group_id = azurerm_network_security_group.private_vm_nsg.id
+}
+
+resource "azurerm_network_interface_security_group_association" "private_vm_nic_nsg_3" {
+  network_interface_id      = azurerm_network_interface.private_vm_nic_3.id
+  network_security_group_id = azurerm_network_security_group.private_vm_nsg.id
 }
