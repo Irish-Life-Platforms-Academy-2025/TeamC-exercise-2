@@ -6,6 +6,13 @@ variable "prefix" {
   type        = string
   default     = "TEAMC-DEV"
 }
+
+variable "postgreesql_prefix" {
+  description = "The prefix for the resource names"
+  type        = string
+  default     = "teamc-dev"
+}
+
 variable "dns_hostname" {
   description = "The DNS hostname for the environment"
   type        = string
