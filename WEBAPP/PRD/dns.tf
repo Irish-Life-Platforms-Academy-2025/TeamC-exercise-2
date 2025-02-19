@@ -1,6 +1,6 @@
 
 resource "azurerm_resource_group" "dns" {
-  name     = "${var.prefix}-DNS-RG"
+   name     = "${var.prefix}-RG"
   location = var.default_region
 }
 

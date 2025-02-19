@@ -120,7 +120,7 @@ variable "OS_Azure_Caching" {
 variable "AzureRM_CDN_SKU" {
     description = "Defines the SKU for CDN"
     type = string
-    default = "Standard_Verizon"
+    default = "Standard_Microsoft"
   
 }
 variable "AzureKeyVault_SKU" {

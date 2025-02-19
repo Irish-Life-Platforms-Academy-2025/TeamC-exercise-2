@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "public_ip" {
-  name     = "${var.prefix}-PUBLICIP-RG"
+    name     = "${var.prefix}-RG"
   location = var.default_region
 }
 

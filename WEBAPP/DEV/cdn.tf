@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "cdn" {
   name     = "${var.prefix}-CDN-RG"
-  location = var.default_region
+  location = "northeurope"
 }
 
 

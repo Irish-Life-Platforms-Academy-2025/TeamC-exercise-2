@@ -6,6 +6,13 @@ variable "prefix" {
   type        = string
   default     = "TEAMC-PRD"
 }
+
+variable "postgreesql_prefix" {
+  description = "The prefix for the resource names"
+  type        = string
+  default     = "teamc-prd"
+}
+
 variable "dns_hostname" {
   description = "The DNS hostname for the environment"
   type        = string
@@ -113,7 +120,7 @@ variable "OS_Azure_Caching" {
 variable "AzureRM_CDN_SKU" {
     description = "Defines the SKU for CDN"
     type = string
-    default = "Standard_Verizon"
+    default = "Standard_Microsoft"
   
 }
 variable "AzureKeyVault_SKU" {

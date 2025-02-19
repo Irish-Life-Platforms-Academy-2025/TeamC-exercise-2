@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "lb" {
-  name     = "${var.prefix}-LB-RG"
+   name     = "${var.prefix}-RG"
   location = var.default_region
 }
 
