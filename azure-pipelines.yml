@@ -1,19 +1,49 @@
-? # Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+jobs:
+- job: DevPlan
+  displayName: 'Dev Plan'
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+  - script: |
+      terraform init -backend-config="path=dev.tfstate"
+      terraform plan -out=dev.plan
+    displayName: 'Terraform Init and Plan for Dev'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- job: DevApply
+  displayName: 'Dev Apply'
+  dependsOn: DevPlan
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+  - script: |
+      terraform init -backend-config="path=dev.tfstate"
+      terraform apply "dev.plan"
+    displayName: 'Terraform Apply for Dev'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- job: LivePlan
+  displayName: 'Live Plan'
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+  - script: |
+      terraform init -backend-config="path=live.tfstate"
+      terraform plan -out=live.plan
+    displayName: 'Terraform Init and Plan for Live'
+
+- job: LiveApply
+  displayName: 'Live Apply'
+  dependsOn: LivePlan
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+  - script: |
+      terraform init -backend-config="path=live.tfstate"
+      terraform apply "live.plan"
+    displayName: 'Terraform Apply for Live'
