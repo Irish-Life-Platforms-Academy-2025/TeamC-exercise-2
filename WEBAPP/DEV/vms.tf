@@ -1,7 +1,7 @@
 
 
 resource "azurerm_resource_group" "vms" {
-    name     = "${var.prefix}-RG"
+  name     = "${var.prefix}-RG"
   location = var.default_region
 }
 
