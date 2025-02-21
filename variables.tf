@@ -1,6 +1,4 @@
-
 #Global
-
 variable "prefix" {
   description = "The prefix for the resource names"
   type        = string

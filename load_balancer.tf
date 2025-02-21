@@ -1,8 +1,3 @@
-resource "azurerm_resource_group" "lb" {
-   name     = "${var.prefix}-RG"
-  location = var.default_region
-}
-
 resource "azurerm_public_ip" "lb_public_ip" {
   name                = "${var.prefix}-LB-PUBLICIP"
   resource_group_name = azurerm_resource_group.lb.name
