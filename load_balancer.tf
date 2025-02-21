@@ -1,3 +1,4 @@
+# Defines an Azure Public IP for the Load Balancer
 resource "azurerm_public_ip" "lb_public_ip" {
   name                = "${var.prefix}-LB-PUBLICIP"
   resource_group_name = azurerm_resource_group.lb.name
@@ -6,6 +7,7 @@ resource "azurerm_public_ip" "lb_public_ip" {
   sku                 = "Standard"
 }
 
+# Defines an Azure Load Balancer
 resource "azurerm_lb" "load_balancer" {
   name                = "${var.prefix}-LB"
   location            = azurerm_resource_group.lb.location
