@@ -28,7 +28,7 @@ resource "azurerm_resource_group" "sql" {
   location = var.default_region      
 }
 
-# This resource block defines an Azure Resource Group for VMs
+# This resource block defines an Azure Resource Group for Virtual Machines
 resource "azurerm_resource_group" "vms" {
   name     = "${var.prefix}-RG"
   location = var.default_region
