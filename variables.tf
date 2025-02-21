@@ -131,3 +131,8 @@ variable "Azure_PublicIP_SKU" {
     default = "Standard"
   
 }
+variable "client_secret" {
+    type = string
+    sensitive = true
+
+}
